@@ -14,16 +14,15 @@ import java.util.logging.Logger;
  */
 public class BungeePluginFinder extends PluginFinder {
 
-    @Override
-    public Object findPlugin() {
+    private Plugin findPlugin(int searchIndex) {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         Class<?> clazz = null;
         int hashSourceCode;
 
-        if (stackTraceElements.length < 5)
+        if (stackTraceElements.length < (searchIndex + 1))
             return null;
         try {
-            clazz = Class.forName(stackTraceElements[4].getClassName());
+            clazz = Class.forName(stackTraceElements[searchIndex].getClassName());
         } catch (ClassNotFoundException ignored) {}
         if (clazz == null)
             return null;
@@ -32,6 +31,16 @@ public class BungeePluginFinder extends PluginFinder {
             if (plugin.getClass().getProtectionDomain().getCodeSource().hashCode() == hashSourceCode)
                 return plugin;
         return null;
+    }
+
+    @Override
+    public Object findPluginCaller() {
+        return findPlugin(4);
+    }
+
+    @Override
+    public Object findPlugin() {
+        return findPlugin(3);
     }
 
     @Override

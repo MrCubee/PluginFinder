@@ -15,7 +15,13 @@ public abstract class PluginFinder {
 
     public static final PluginFinder INSTANCE = getFinder();
 
-    /** Retrieves which plugin calls the current function.
+    /** Retrieves the plugin instance that calls the current function.
+     * @since 1.0
+     * @return  The current plugin.
+     */
+    public abstract Object findPluginCaller();
+
+    /** Retrieve the current plugin instance.
      * @since 1.0
      * @return The current plugin.
      */
@@ -63,6 +69,12 @@ public abstract class PluginFinder {
         else if (getClass("net.md_5.bungee.api.plugin.Plugin") != null)
             return new BungeePluginFinder();
         return new PluginFinder() {
+
+            @Override
+            public Object findPluginCaller() {
+                return null;
+            }
+
             @Override
             public Object findPlugin() {
                 return null;

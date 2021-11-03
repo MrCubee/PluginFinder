@@ -4,6 +4,7 @@
     <groupId>fr.mrcubee.minecraft.library</groupId>
     <artifactId>plugin-finder</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
 
     <name>Plugin Finder</name>
     <description>Automatically finds the current plugin instance.</description>
@@ -64,7 +65,7 @@
     <build>
         <defaultGoal>clean install</defaultGoal>
         <sourceDirectory>src</sourceDirectory>
-        <finalName>${pom.name}</finalName>
+        <finalName>${pom.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -73,32 +74,6 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <shadedArtifactAttached>false</shadedArtifactAttached>
-                    <finalName>${pom.name}</finalName>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
                 </configuration>
             </plugin>
         </plugins>

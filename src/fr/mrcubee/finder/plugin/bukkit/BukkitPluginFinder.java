@@ -1,6 +1,7 @@
 package fr.mrcubee.finder.plugin.bukkit;
 
 import fr.mrcubee.finder.plugin.PluginFinder;
+import net.md_5.bungee.BungeeCord;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -14,25 +15,33 @@ import java.util.logging.Logger;
  */
 public class BukkitPluginFinder extends PluginFinder {
 
-    @Override
-    public Object findPlugin() {
+    private Plugin findPlugin(int searchIndex) {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         Class<?> clazz = null;
         int hashSourceCode;
 
-        if (stackTraceElements.length < 4)
+        if (stackTraceElements.length < (searchIndex + 1))
             return null;
         try {
-            clazz = Class.forName(stackTraceElements[3].getClassName());
+            clazz = Class.forName(stackTraceElements[searchIndex].getClassName());
         } catch (ClassNotFoundException ignored) {}
         if (clazz == null)
             return null;
         hashSourceCode = clazz.getProtectionDomain().getCodeSource().hashCode();
-        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+        for (Plugin plugin : Bukkit.getPluginManager().getPlugins())
             if (plugin.getClass().getProtectionDomain().getCodeSource().hashCode() == hashSourceCode)
                 return plugin;
-        }
         return null;
+    }
+
+    @Override
+    public Object findPluginCaller() {
+        return findPlugin(4);
+    }
+
+    @Override
+    public Object findPlugin() {
+        return findPlugin(3);
     }
 
     @Override
