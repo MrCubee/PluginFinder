@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group 'fr.mrcubee.minecraft.library'
+version '1.0'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url 'https://nexus.mrcubee.net/repository/minecraft/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+    compileOnly 'net.md-5:bungeecord-api:1.20-R0.2-SNAPSHOT'
+}
+
+jar {
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    exclude "**/META-INF/**"
+}
+
+publishing {
+
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url 'https://nexus.mrcubee.net/repository/minecraft/'
+
+            credentials {
+                username = findProperty("mavenUsername") ?: System.getenv("MAVEN_USERNAME")
+                password = findProperty("mavenPassword") ?: System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}
